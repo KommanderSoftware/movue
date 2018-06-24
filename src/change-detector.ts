@@ -43,9 +43,11 @@ export default class ChangeDetector {
   }
   removeReactionList(vm: VueClass) {
     const reactivePropertyListKey = this._getReactionListKey(vm)
-
-    this.changeDetector[reactivePropertyListKey].forEach(dispose => dispose())
-    delete this.changeDetector[reactivePropertyListKey]
+    // only try to dispose of changeDetector subscriptions if they exist!
+    if (!!this.changeDetector[reactivePropertyListKey]) {
+      this.changeDetector[reactivePropertyListKey].forEach(dispose => dispose())
+      delete this.changeDetector[reactivePropertyListKey]
+    }
   }
 
   _getReactionListKey(vm: VueClass): string {
